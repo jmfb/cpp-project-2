@@ -1,0 +1,93 @@
+<Project name="cpp-project2">
+	<Settings>
+		<Standard>c++11</Standard>
+		<Subsystem>windows</Subsystem>
+		<Warnings>all</Warnings>
+		<WarningsAsErrors>True</WarningsAsErrors>
+		<OptimizationLevel>0</OptimizationLevel>
+		<Target>EXE</Target>
+		<Architecture>64-bit</Architecture>
+		<DebugInfo>False</DebugInfo>
+		<Multithreaded>True</Multithreaded>
+		<OutputFolder>output</OutputFolder>
+		<OutputFileName>{ProjectName}.exe</OutputFileName>
+		<IncludeDirectories>
+			<IncludeDirectory>c:\save\code</IncludeDirectory>
+		</IncludeDirectories>
+		<Libraries>
+			<Library>comctl32</Library>
+			<Library>gdi32</Library>
+		</Libraries>
+		<ProjectReferences>
+			<ProjectReference>Wex/Wex.cpp-project</ProjectReference>
+		</ProjectReferences>
+	</Settings>
+	<Files>
+		<Folder name="Classes">
+			<Folder name="Application">
+				<File>Application.h</File>
+				<File>Application.cpp</File>
+				<File>Application.Test.cpp</File>
+			</Folder>
+			<Folder name="CommandLine">
+				<File>CommandLine.h</File>
+				<File>CommandLine.cpp</File>
+				<File>CommandLine.Test.cpp</File>
+			</Folder>
+			<Folder name="Windows">
+				<Folder name="MainFrame">
+					<File>MainFrame.h</File>
+					<File>MainFrame.cpp</File>
+					<File>MainFrame.Test.cpp</File>
+				</Folder>
+				<Folder name="TabStrip">
+					<File>TabStrip.h</File>
+					<File>TabStrip.Test.cpp</File>
+				</Folder>
+				<Folder name="DocumentView">
+					<File>DocumentView.h</File>
+					<File>DocumentView.cpp</File>
+					<File>DocumentView.Test.cpp</File>
+				</Folder>
+			</Folder>
+			<Folder name="Models">
+				<Folder name="Document">
+					<File>Document.h</File>
+					<File>Document.cpp</File>
+					<File>Document.Test.cpp</File>
+				</Folder>
+			</Folder>
+			<Folder name="Utilities">
+				<Folder name="TextDrawer">
+					<File>TextDrawer.h</File>
+					<File>TextDrawer.cpp</File>
+					<File>TextDrawer.Test.cpp</File>
+				</Folder>
+				<Folder name="ColoredText">
+					<File>ColoredText.h</File>
+					<File>ColoredText.cpp</File>
+					<File>ColoredText.Test.cpp</File>
+				</Folder>
+				<Folder name="ColorScheme">
+					<File>ColorScheme.h</File>
+					<File>ColorScheme.cpp</File>
+					<File>ColorScheme.Test.cpp</File>
+				</Folder>
+				<Folder name="CPlusPlusColorer">
+					<File>CPlusPlusColorer.h</File>
+					<File>CPlusPlusColorer.cpp</File>
+					<File>CPlusPlusColorer.Test.cpp</File>
+				</Folder>
+			</Folder>
+		</Folder>
+		<Folder name="Headers"/>
+		<Folder name="Resources">
+			<File>manifest.xml</File>
+			<File>resource.h</File>
+			<File>resource.rc</File>
+		</Folder>
+		<File>main.cpp</File>
+		<File>main.Test.cpp</File>
+	</Files>
+</Project>
+
