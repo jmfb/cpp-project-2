@@ -18,7 +18,7 @@ public:
 		int left,
 		int width,
 		int lineNumber,
-		const std::vector<ColoredText>& parts);
+		const ColoredLine& line);
 
 private:
 	int GetCharacterColumns(int column, char character) const;

@@ -3,6 +3,7 @@
 #include <memory>
 #include "DocumentView.h"
 #include "Document.h"
+#include "ConsoleWindow.h"
 
 class MainFrame : public Wex::CustomWindow<MainFrame>
 {
@@ -22,6 +23,7 @@ public:
 private:
 	friend class MainFrameTest;
 	DocumentView documentView;
+	ConsoleWindow console;
 	std::shared_ptr<Document> document;
 };
 

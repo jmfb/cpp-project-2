@@ -13,6 +13,14 @@ bool MainFrame::OnCreate(CREATESTRUCT* cs)
 	document = std::make_shared<Document>();
 	document->Open(R"(c:\save\code\cpp-project2\MainFrame.cpp)");
 
+	console.Create(
+		GetHandle(),
+		"",
+		WS_CHILD|WS_VISIBLE|WS_CLIPSIBLINGS|WS_CLIPCHILDREN,
+		0,
+		GetClient());
+
+	/*
 	documentView.Create(
 		GetHandle(),
 		"",
@@ -20,13 +28,15 @@ bool MainFrame::OnCreate(CREATESTRUCT* cs)
 		0,
 		GetClient());
 	documentView.SetDocument(document);
-
+	*/
+	
 	return true;
 }
 
 void MainFrame::OnSize(int type, const Wex::Size& size)
 {
-	documentView.Move(GetClient());
+	//documentView.Move(GetClient());
+	console.Move(GetClient());
 }
 
 void MainFrame::OnDestroy()

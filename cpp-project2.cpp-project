@@ -49,12 +49,44 @@
 					<File>DocumentView.cpp</File>
 					<File>DocumentView.Test.cpp</File>
 				</Folder>
+				<Folder name="ConsoleWindow">
+					<File>ConsoleWindow.h</File>
+					<File>ConsoleWindow.cpp</File>
+					<File>ConsoleWindow.Test.cpp</File>
+				</Folder>
 			</Folder>
 			<Folder name="Models">
 				<Folder name="Document">
 					<File>Document.h</File>
 					<File>Document.cpp</File>
 					<File>Document.Test.cpp</File>
+				</Folder>
+				<Folder name="Console">
+					<Folder name="Console">
+						<File>Console.h</File>
+						<File>Console.cpp</File>
+						<File>Console.Test.cpp</File>
+					</Folder>
+					<Folder name="ConsoleCommandParser">
+						<File>ConsoleCommandParser.h</File>
+						<File>ConsoleCommandParser.cpp</File>
+						<File>ConsoleCommandParser.Test.cpp</File>
+					</Folder>
+					<Folder name="ConsoleOpenProject">
+						<File>ConsoleOpenProject.h</File>
+						<File>ConsoleOpenProject.cpp</File>
+						<File>ConsoleOpenProject.Test.cpp</File>
+					</Folder>
+					<Folder name="ConsoleCommand">
+						<File>ConsoleCommand.h</File>
+						<File>ConsoleCommand.cpp</File>
+						<File>ConsoleCommand.Test.cpp</File>
+					</Folder>
+					<Folder name="ConsoleExit">
+						<File>ConsoleExit.h</File>
+						<File>ConsoleExit.cpp</File>
+						<File>ConsoleExit.Test.cpp</File>
+					</Folder>
 				</Folder>
 			</Folder>
 			<Folder name="Utilities">

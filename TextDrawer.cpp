@@ -14,12 +14,12 @@ void TextDrawer::DrawLine(
 	int left,
 	int width,
 	int lineNumber,
-	const std::vector<ColoredText>& parts)
+	const ColoredLine& line)
 {
 	auto top = lineNumber * textSize.cy;
 	auto nextLeft = left;
 	auto column = 0;
-	for (const auto& part: parts)
+	for (const auto& part: line)
 	{
 		deviceContext.SetBackColor(part.backColor);
 		deviceContext.SetTextColor(part.textColor);
