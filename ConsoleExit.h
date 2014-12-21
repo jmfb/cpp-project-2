@@ -1,5 +1,6 @@
 #pragma once
 #include "ConsoleCommand.h"
+#include "Console.h"
 
 class ConsoleExit : public ConsoleCommand
 {
@@ -10,8 +11,7 @@ public:
 
 	ConsoleExit& operator=(const ConsoleExit& rhs) = default;
 
-	void Execute(const std::vector<std::string>& arguments);
-	void Exit();
+	void Execute(Console& console, const std::vector<std::string>& arguments);
 
 private:
 	friend class ConsoleExitTest;

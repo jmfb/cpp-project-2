@@ -7,15 +7,9 @@ ConsoleExit::ConsoleExit()
 {
 }
 
-void ConsoleExit::Execute(const std::vector<std::string>& arguments)
+void ConsoleExit::Execute(Console& console, const std::vector<std::string>& arguments)
 {
 	ValidateArguments(arguments);
-	Exit();
-}
-
-void ConsoleExit::Exit()
-{
-	//TODO: Perform application shutdown?
-	::PostQuitMessage(0);
+	console.Exit();
 }
 

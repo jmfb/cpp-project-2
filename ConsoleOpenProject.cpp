@@ -2,30 +2,28 @@
 #include "ConsoleOpenProject.h"
 #include <Wex/Path.h>
 #include <Wex/File.h>
-#include <Wex/Exception.h>
+#include <stdexcept>
 
 ConsoleOpenProject::ConsoleOpenProject()
 	: ConsoleCommand{ "open", { "project-name" }, "Opens the given project." }
 {
 }
 
-void ConsoleOpenProject::Execute(const std::vector<std::string>& arguments)
+void ConsoleOpenProject::Execute(Console& console, const std::vector<std::string>& arguments)
 {
 	ValidateArguments(arguments);
-	OpenProject(arguments[0]);
+	OpenProject(console, arguments[0]);
 }
 
-void ConsoleOpenProject::OpenProject(const std::string& projectName)
+void ConsoleOpenProject::OpenProject(Console& console, const std::string& projectName)
 {
-	//TODO: allow user to change this
-	const std::string currentDirectory = R"(c:\save\code)";
-
+	auto currentDirectory = console.GetCurrentDirectory();
 	auto fullPath = Wex::Path::Combine(currentDirectory, projectName + ".cpp-project");
 	if (!Wex::File::Exists(fullPath))
 		fullPath = Wex::Path::Combine(currentDirectory,
 			projectName + "\\" + projectName + ".cpp-project");
-	CheckError(!Wex::File::Exists(fullPath), 0, "File does not exist.");
-
-	//TODO: something
+	if (!Wex::File::Exists(fullPath))
+		throw std::runtime_error{ "File does not exist." };
+	console.OpenProject(fullPath);
 }
 

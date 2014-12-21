@@ -2,35 +2,29 @@
 #include "Console.h"
 #include "ColorScheme.h"
 #include "ConsoleCommandParser.h"
+#include "ConsoleChangeDirectory.h"
+#include "ConsoleCurrentDirectory.h"
+#include "ConsoleDirectoryList.h"
 #include "ConsoleOpenProject.h"
 #include "ConsoleExit.h"
 #include <tuple>
+#include <sstream>
+#include <iostream>
 
 using Commands = std::tuple<
 	ConsoleOpenProject,
+	ConsoleCurrentDirectory,
+	ConsoleChangeDirectory,
+	ConsoleDirectoryList,
 	ConsoleExit
 >;
-
-bool Execute(std::tuple<>, const ConsoleCommandParser& parsedCommand)
-{
-	return false;
-}
-
-template <typename Command, typename... Commands>
-bool Execute(std::tuple<Command, Commands...>, const ConsoleCommandParser& parsedCommand)
-{
-	Command command;
-	if (command.GetName() != parsedCommand.GetName())
-		return Execute(std::tuple<Commands...>{}, parsedCommand);
-	command.Execute(parsedCommand.GetArguments());
-	return true;
-}
 
 void Console::ExecuteCommand(const std::string& command)
 {
 	ConsoleCommandParser parsedCommand{ command };
 	errorCommand.clear();
 	errorMessage.clear();
+	messages.clear();
 	try
 	{
 		if (!Execute(Commands{}, parsedCommand))
@@ -44,21 +38,6 @@ void Console::ExecuteCommand(const std::string& command)
 		errorCommand = command;
 		errorMessage = exception.what();
 	}
-}
-
-std::vector<ConsoleCommand> GetCommands(std::tuple<>)
-{
-	return {};
-}
-
-template <typename Command, typename... Commands>
-std::vector<ConsoleCommand> GetCommands(std::tuple<Command, Commands...>)
-{
-	std::vector<ConsoleCommand> commands;
-	commands.push_back(Command{});
-	for (const auto& command : GetCommands(std::tuple<Commands...>{}))
-		commands.push_back(command);
-	return commands;
 }
 
 ColoredLines Console::GetPrompt(const std::string& partialCommand) const
@@ -76,8 +55,55 @@ ColoredLines Console::GetPrompt(const std::string& partialCommand) const
 	{
 		prompt.push_back({});
 		prompt.push_back({ { ColorScheme::Console::Default, errorCommand } });
-		prompt.push_back({ { ColorScheme::Console::Error, errorMessage } });
+		std::string errorLine;
+		std::istringstream errors{ errorMessage };
+		while (std::getline(errors, errorLine))
+			prompt.push_back({ { ColorScheme::Console::Error, errorLine } });
 	}
+
+	if (!messages.empty())
+	{
+		prompt.push_back({});
+		for (const auto& message : messages)
+			prompt.push_back({ { ColorScheme::Console::Default, message } });
+	}
+	
 	return prompt;
+}
+
+void Console::WriteLine(const std::string& message)
+{
+	messages.push_back(message);
+}
+
+const std::string& Console::GetCurrentDirectory() const
+{
+	return currentDirectory;
+}
+
+void Console::SetCurrentDirectory(const std::string& value)
+{
+	currentDirectory = value;
+}
+
+void Console::OpenProject(const std::string& fullPath)
+{
+}
+
+void Console::Exit()
+{
+	::PostQuitMessage(0);
+}
+
+bool Console::Execute(
+	std::tuple<>,
+	const ConsoleCommandParser& parsedCommand)
+{
+	return false;
+}
+
+std::vector<ConsoleCommand> Console::GetCommands(std::tuple<>) const
+{
+	return {};
 }
 

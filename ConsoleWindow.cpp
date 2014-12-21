@@ -19,7 +19,7 @@ bool ConsoleWindow::OnCreate(CREATESTRUCT* cs)
 	font.Create("Consolas", Wex::Font::CalculateHeight(deviceContext, 10));
 	deviceContext.Select(font);
 	textSize = deviceContext.GetTextSize();
-	
+
 	CreateSolidCaret(2, textSize.cy);
 	::SetCaretPos(0, 0);
 	ShowCaret();
@@ -41,7 +41,7 @@ void ConsoleWindow::OnPaint()
 	TextDrawer drawer{ deviceContext };
 	auto prompt = console.GetPrompt(command);
 	for (auto lineNumber = 0ul; lineNumber < prompt.size(); ++lineNumber)
-		drawer.DrawLine(client.left + 10, client.right, lineNumber + 2, prompt[lineNumber]);
+		drawer.DrawLine(client.left, client.right, lineNumber + 2, prompt[lineNumber]);
 }
 
 void ConsoleWindow::OnChar(int c, int count, unsigned long flags)

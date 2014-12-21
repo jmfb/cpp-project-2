@@ -87,6 +87,21 @@
 						<File>ConsoleExit.cpp</File>
 						<File>ConsoleExit.Test.cpp</File>
 					</Folder>
+					<Folder name="ConsoleChangeDirectory">
+						<File>ConsoleChangeDirectory.h</File>
+						<File>ConsoleChangeDirectory.cpp</File>
+						<File>ConsoleChangeDirectory.Test.cpp</File>
+					</Folder>
+					<Folder name="ConsoleCurrentDirectory">
+						<File>ConsoleCurrentDirectory.h</File>
+						<File>ConsoleCurrentDirectory.cpp</File>
+						<File>ConsoleCurrentDirectory.Test.cpp</File>
+					</Folder>
+					<Folder name="ConsoleDirectoryList">
+						<File>ConsoleDirectoryList.h</File>
+						<File>ConsoleDirectoryList.cpp</File>
+						<File>ConsoleDirectoryList.Test.cpp</File>
+					</Folder>
 				</Folder>
 			</Folder>
 			<Folder name="Utilities">

@@ -1,5 +1,6 @@
 #pragma once
 #include "ConsoleCommand.h"
+#include "Console.h"
 
 class ConsoleOpenProject : public ConsoleCommand
 {
@@ -10,8 +11,8 @@ public:
 
 	ConsoleOpenProject& operator=(const ConsoleOpenProject& rhs) = default;
 
-	void Execute(const std::vector<std::string>& arguments);
-	void OpenProject(const std::string& projectName);
+	void Execute(Console& console, const std::vector<std::string>& arguments);
+	void OpenProject(Console& console, const std::string& projectName);
 
 private:
 	friend class ConsoleOpenProjectTest;
