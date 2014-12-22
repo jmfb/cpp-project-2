@@ -83,6 +83,7 @@ public:
 	ColoredLines GetDisplay() const;
 
 	void WriteLine(const std::string& message);
+	void WriteLine(const ColoredLine& message);
 
 	const std::string& GetCurrentDirectory() const;
 	void SetCurrentDirectory(const std::string& value);
@@ -103,6 +104,6 @@ private:
 	std::string errorMessage;
 	std::string currentDirectory = R"(c:\save\code)";
 	std::string currentProjectName;
-	std::vector<std::string> messages;
+	std::vector<ColoredLine> messages;
 };
 

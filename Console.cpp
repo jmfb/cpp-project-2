@@ -102,13 +102,18 @@ ColoredLines Console::GetDisplay() const
 	{
 		prompt.push_back({});
 		for (const auto& message : messages)
-			prompt.push_back({ { ColorScheme::Console::Default, message } });
+			prompt.push_back(message);
 	}
 
 	return prompt;
 }
 
 void Console::WriteLine(const std::string& message)
+{
+	messages.push_back({ { ColorScheme::Console::Default, message } });
+}
+
+void Console::WriteLine(const ColoredLine& message)
 {
 	messages.push_back(message);
 }

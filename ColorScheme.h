@@ -27,6 +27,8 @@ namespace ColorScheme
 		static const auto Comment = RGB(87, 166, 74);
 		static const auto String = RGB(214, 157, 133);
 		static const auto Error = RGB(220, 0, 0);
+		static const auto Directory = RGB(0, 255, 0);
+		static const auto Project = RGB(189, 99, 197);
 	}
 
 	namespace CPlusPlus

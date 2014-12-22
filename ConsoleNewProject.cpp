@@ -3,6 +3,7 @@
 #include <Wex/Path.h>
 #include <Wex/File.h>
 #include <stdexcept>
+#include "Project.h"
 
 ConsoleNewProject::ConsoleNewProject()
 	: ConsoleCommand{ "new", { "project-name" }, "Create a new project." }
@@ -20,7 +21,7 @@ void ConsoleNewProject::Execute(
 		name);
 	auto fullPath = Wex::Path::Combine(
 		projectDirectory,
-		name + ".cpp-project");
+		name + "." + Project::Extension);
 	if (Wex::File::Exists(fullPath))
 		throw std::runtime_error{ "Project already exists." };
 	console.NewProject(name);

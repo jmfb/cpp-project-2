@@ -14,6 +14,8 @@ public:
 	void Execute(Console& console, const std::vector<std::string>& arguments);
 
 private:
+
+private:
 	friend class ConsoleDirectoryListTest;
 };
 

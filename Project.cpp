@@ -25,10 +25,12 @@ const auto defaultMultithreaded = true;
 const auto defaultOutputFolder = "output";
 const auto defaultOutputFileName = "{ProjectName}.exe";
 
+const std::string Project::Extension = "cpp-project";
+
 void Project::New(const std::string& directory, const std::string& name)
 {
 	auto projectDirectory = Wex::Path::Combine(directory, name);
-	fileName = Wex::Path::Combine(projectDirectory, name + ".cpp-project");
+	fileName = Wex::Path::Combine(projectDirectory, name + "." + Extension);
 	this->name = name;
 	standard = defaultStandard;
 	subsystem = defaultSubsystem;

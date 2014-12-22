@@ -11,6 +11,8 @@ public:
 
 	Project& operator=(const Project& rhs) = default;
 
+	static const std::string Extension;
+	
 	void New(const std::string& directory, const std::string& name);
 	void Open(const std::string& fileName);
 	void Save();

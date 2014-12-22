@@ -3,6 +3,7 @@
 #include <Wex/Path.h>
 #include <Wex/File.h>
 #include <stdexcept>
+#include "Project.h"
 
 ConsoleOpenProject::ConsoleOpenProject()
 	: ConsoleCommand{ "open", { "project-name" }, "Opens the given project." }
@@ -18,10 +19,10 @@ void ConsoleOpenProject::Execute(Console& console, const std::vector<std::string
 void ConsoleOpenProject::OpenProject(Console& console, const std::string& projectName)
 {
 	auto currentDirectory = console.GetCurrentDirectory();
-	auto fullPath = Wex::Path::Combine(currentDirectory, projectName + ".cpp-project");
+	auto fullPath = Wex::Path::Combine(currentDirectory, projectName + "." + Project::Extension);
 	if (!Wex::File::Exists(fullPath))
 		fullPath = Wex::Path::Combine(currentDirectory,
-			projectName + "\\" + projectName + ".cpp-project");
+			projectName + "\\" + projectName + "." + Project::Extension);
 	if (!Wex::File::Exists(fullPath))
 		throw std::runtime_error{ "File does not exist." };
 	console.OpenProject(fullPath);
