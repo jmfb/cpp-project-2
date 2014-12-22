@@ -4,18 +4,52 @@
 #include "ConsoleCommandParser.h"
 #include "ConsoleChangeDirectory.h"
 #include "ConsoleDirectoryList.h"
+#include "ConsoleNewProject.h"
 #include "ConsoleOpenProject.h"
+#include "ConsoleCloseProject.h"
 #include "ConsoleExit.h"
 #include <tuple>
 #include <sstream>
 #include <iostream>
 
-using Commands = std::tuple<
-	ConsoleOpenProject,
-	ConsoleChangeDirectory,
-	ConsoleDirectoryList,
-	ConsoleExit
->;
+bool Console::ConsoleMode::Execute(
+	std::tuple<>,
+	Console& console,
+	const ConsoleCommandParser& parsedCommand)
+{
+	return false;
+}
+
+std::vector<ConsoleCommand> Console::ConsoleMode::GetCommands(
+	std::tuple<>)
+{
+	return {};
+}
+
+const Console::ConsoleMode Console::Initial =
+	Console::ConsoleMode::Create<std::tuple<
+		ConsoleNewProject,
+		ConsoleOpenProject,
+		ConsoleChangeDirectory,
+		ConsoleDirectoryList,
+		ConsoleExit
+	>>([](const Console& console){ return console.GetCurrentDirectory() + "> "; });
+
+const Console::ConsoleMode Console::Project =
+	Console::ConsoleMode::Create<std::tuple<
+		ConsoleCloseProject,
+		ConsoleExit
+	>>([](const Console& console){ return console.GetCurrentProjectName() + "> "; });
+
+Console::Console(ConsoleEvents& events)
+	: events{ &events }, mode{ &Initial }
+{
+}
+
+void Console::SwitchMode(const ConsoleMode& value)
+{
+	mode = &value;
+}
 
 void Console::ExecuteCommand(const std::string& command)
 {
@@ -25,7 +59,7 @@ void Console::ExecuteCommand(const std::string& command)
 	messages.clear();
 	try
 	{
-		if (!Execute(Commands{}, parsedCommand))
+		if (!mode->executeCommand(*this, parsedCommand))
 		{
 			errorCommand = command;
 			errorMessage = "Invalid command";
@@ -38,9 +72,14 @@ void Console::ExecuteCommand(const std::string& command)
 	}
 }
 
-ColoredLines Console::GetPrompt() const
+std::string Console::GetPrompt() const
 {
-	auto commands = GetCommands(Commands{});
+	return mode->getPrompt(*this);
+}
+
+ColoredLines Console::GetDisplay() const
+{
+	auto commands = mode->getCommands();
 	auto maxCommandLength = 0;
 	for (const auto& command : commands)
 		maxCommandLength = std::max(maxCommandLength, command.GetCommandLength());
@@ -84,24 +123,33 @@ void Console::SetCurrentDirectory(const std::string& value)
 	currentDirectory = value;
 }
 
+const std::string& Console::GetCurrentProjectName() const
+{
+	return currentProjectName;
+}
+
+void Console::SetCurrentProjectName(const std::string& value)
+{
+	currentProjectName = value;
+}
+
+void Console::NewProject(const std::string& name)
+{
+	events->OnNewProject(name);
+}
+
 void Console::OpenProject(const std::string& fullPath)
 {
+	events->OnOpenProject(fullPath);
+}
+
+void Console::CloseProject()
+{
+	events->OnCloseProject();
 }
 
 void Console::Exit()
 {
-	::PostQuitMessage(0);
-}
-
-bool Console::Execute(
-	std::tuple<>,
-	const ConsoleCommandParser& parsedCommand)
-{
-	return false;
-}
-
-std::vector<ConsoleCommand> Console::GetCommands(std::tuple<>) const
-{
-	return {};
+	events->OnExit();
 }
 

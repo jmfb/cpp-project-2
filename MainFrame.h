@@ -4,11 +4,14 @@
 #include "DocumentView.h"
 #include "Document.h"
 #include "ConsoleWindow.h"
+#include "Project.h"
 
-class MainFrame : public Wex::CustomWindow<MainFrame>
+class MainFrame :
+	public Wex::CustomWindow<MainFrame>,
+	public ConsoleWindowEvents
 {
 public:
-	MainFrame() = default;
+	MainFrame();
 	MainFrame(const MainFrame& rhs) = delete;
 	~MainFrame() = default;
 
@@ -21,10 +24,18 @@ public:
 	void OnSize(int type, const Wex::Size& size) override;
 	void OnDestroy() override;
 
+	void OnNewProject(
+		const std::string& directory,
+		const std::string& name) override;
+	void OnOpenProject(const std::string& fullPath) override;
+	void OnCloseProject() override;
+	void OnExit() override;
+
 private:
 	friend class MainFrameTest;
 	DocumentView documentView;
-	ConsoleWindow console;
+	ConsoleWindow consoleWindow;
+	Project project;
 	std::shared_ptr<Document> document;
 };
 

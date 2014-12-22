@@ -53,6 +53,7 @@
 					<File>ConsoleWindow.h</File>
 					<File>ConsoleWindow.cpp</File>
 					<File>ConsoleWindow.Test.cpp</File>
+					<File>ConsoleWindowEvents.h</File>
 				</Folder>
 				<Folder name="PromptWindow">
 					<File>PromptWindow.h</File>
@@ -77,6 +78,7 @@
 						<File>Console.h</File>
 						<File>Console.cpp</File>
 						<File>Console.Test.cpp</File>
+						<File>ConsoleEvents.h</File>
 					</Folder>
 					<Folder name="ConsoleCommandParser">
 						<File>ConsoleCommandParser.h</File>
@@ -108,6 +110,21 @@
 						<File>ConsoleDirectoryList.cpp</File>
 						<File>ConsoleDirectoryList.Test.cpp</File>
 					</Folder>
+					<Folder name="ConsoleNewProject">
+						<File>ConsoleNewProject.h</File>
+						<File>ConsoleNewProject.cpp</File>
+						<File>ConsoleNewProject.Test.cpp</File>
+					</Folder>
+					<Folder name="ConsoleCloseProject">
+						<File>ConsoleCloseProject.h</File>
+						<File>ConsoleCloseProject.cpp</File>
+						<File>ConsoleCloseProject.Test.cpp</File>
+					</Folder>
+				</Folder>
+				<Folder name="Project">
+					<File>Project.h</File>
+					<File>Project.cpp</File>
+					<File>Project.Test.cpp</File>
 				</Folder>
 			</Folder>
 			<Folder name="Utilities">
@@ -138,6 +155,11 @@
 			<File>manifest.xml</File>
 			<File>resource.h</File>
 			<File>resource.rc</File>
+			<Folder name="JsonCpp">
+				<File>json\json_reader.cpp</File>
+				<File>json\json_value.cpp</File>
+				<File>json\json_writer.cpp</File>
+			</Folder>
 		</Folder>
 		<File>main.cpp</File>
 		<File>main.Test.cpp</File>
