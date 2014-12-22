@@ -54,6 +54,17 @@
 					<File>ConsoleWindow.cpp</File>
 					<File>ConsoleWindow.Test.cpp</File>
 				</Folder>
+				<Folder name="PromptWindow">
+					<File>PromptWindow.h</File>
+					<File>PromptWindow.cpp</File>
+					<File>PromptWindow.Test.cpp</File>
+					<File>PromptWindowEvents.h</File>
+				</Folder>
+				<Folder name="DisplayWindow">
+					<File>DisplayWindow.h</File>
+					<File>DisplayWindow.cpp</File>
+					<File>DisplayWindow.Test.cpp</File>
+				</Folder>
 			</Folder>
 			<Folder name="Models">
 				<Folder name="Document">
@@ -91,11 +102,6 @@
 						<File>ConsoleChangeDirectory.h</File>
 						<File>ConsoleChangeDirectory.cpp</File>
 						<File>ConsoleChangeDirectory.Test.cpp</File>
-					</Folder>
-					<Folder name="ConsoleCurrentDirectory">
-						<File>ConsoleCurrentDirectory.h</File>
-						<File>ConsoleCurrentDirectory.cpp</File>
-						<File>ConsoleCurrentDirectory.Test.cpp</File>
 					</Folder>
 					<Folder name="ConsoleDirectoryList">
 						<File>ConsoleDirectoryList.h</File>

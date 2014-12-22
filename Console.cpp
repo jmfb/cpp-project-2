@@ -3,7 +3,6 @@
 #include "ColorScheme.h"
 #include "ConsoleCommandParser.h"
 #include "ConsoleChangeDirectory.h"
-#include "ConsoleCurrentDirectory.h"
 #include "ConsoleDirectoryList.h"
 #include "ConsoleOpenProject.h"
 #include "ConsoleExit.h"
@@ -13,7 +12,6 @@
 
 using Commands = std::tuple<
 	ConsoleOpenProject,
-	ConsoleCurrentDirectory,
 	ConsoleChangeDirectory,
 	ConsoleDirectoryList,
 	ConsoleExit
@@ -40,7 +38,7 @@ void Console::ExecuteCommand(const std::string& command)
 	}
 }
 
-ColoredLines Console::GetPrompt(const std::string& partialCommand) const
+ColoredLines Console::GetPrompt() const
 {
 	auto commands = GetCommands(Commands{});
 	auto maxCommandLength = 0;
@@ -67,7 +65,7 @@ ColoredLines Console::GetPrompt(const std::string& partialCommand) const
 		for (const auto& message : messages)
 			prompt.push_back({ { ColorScheme::Console::Default, message } });
 	}
-	
+
 	return prompt;
 }
 

@@ -16,6 +16,7 @@ public:
 
 	static void SetupClass(WNDCLASSEX& windowClass);
 
+	void OnActivate(short state, bool minimized, HWND hwnd) override;
 	bool OnCreate(CREATESTRUCT* cs) override;
 	void OnSize(int type, const Wex::Size& size) override;
 	void OnDestroy() override;

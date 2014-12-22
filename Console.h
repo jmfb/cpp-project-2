@@ -16,8 +16,7 @@ public:
 
 	void ExecuteCommand(const std::string& command);
 
-	std::vector<std::vector<ColoredText>> GetPrompt(
-		const std::string& partialCommand) const;
+	ColoredLines GetPrompt() const;
 
 	void WriteLine(const std::string& message);
 

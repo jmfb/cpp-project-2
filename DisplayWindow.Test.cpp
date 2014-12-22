@@ -1,12 +1,12 @@
 #include <Wex/WindowsInclude.h>
-#include "ConsoleCurrentDirectory.h"
+#include "DisplayWindow.h"
 #include <UnitTest/UnitTest.h>
 using UnitTest::Assert;
 
-TEST_CLASS(ConsoleCurrentDirectoryTest)
+TEST_CLASS(DisplayWindowTest)
 {
 public:
-	ConsoleCurrentDirectoryTest()
+	DisplayWindowTest()
 	{
 	}
 

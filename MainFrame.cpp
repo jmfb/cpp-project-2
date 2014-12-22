@@ -1,6 +1,11 @@
 #include <Wex/WindowsInclude.h>
 #include "MainFrame.h"
 
+void MainFrame::OnActivate(short state, bool minimized, HWND hwnd)
+{
+	console.SetFocus();
+}
+
 void MainFrame::SetupClass(WNDCLASSEX& windowClass)
 {
 	windowClass.lpszClassName = "MainFrame";
@@ -29,7 +34,7 @@ bool MainFrame::OnCreate(CREATESTRUCT* cs)
 		GetClient());
 	documentView.SetDocument(document);
 	*/
-	
+
 	return true;
 }
 

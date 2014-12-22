@@ -1,13 +1,15 @@
 #pragma once
 #include <Wex/CustomWindow.h>
-#include <Wex/Font.h>
-#include <Wex/Size.h>
+#include "PromptWindow.h"
+#include "DisplayWindow.h"
 #include "Console.h"
 
-class ConsoleWindow : public Wex::CustomWindow<ConsoleWindow>
+class ConsoleWindow :
+	public Wex::CustomWindow<ConsoleWindow>,
+	public PromptWindowEvents
 {
 public:
-	ConsoleWindow() = default;
+	ConsoleWindow();
 	ConsoleWindow(const ConsoleWindow& rhs) = delete;
 	~ConsoleWindow() = default;
 
@@ -16,14 +18,15 @@ public:
 	static void SetupClass(WNDCLASSEX& windowClass);
 
 	bool OnCreate(CREATESTRUCT* cs) override;
-	void OnPaint() override;
-	void OnChar(int c, int count, unsigned long flags) override;
+	void OnSetFocus(HWND hwnd) override;
+	void OnSize(int type, const Wex::Size& size) override;
+
+	void OnExecuteCommand(const std::string& command) override;
 
 private:
 	friend class ConsoleWindowTest;
-	Wex::Font font;
-	Wex::Size textSize;
-	std::string command;
+	PromptWindow promptWindow;
+	DisplayWindow displayWindow;
 	Console console;
 };
 
