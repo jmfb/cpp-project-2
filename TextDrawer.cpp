@@ -10,9 +10,19 @@ TextDrawer::TextDrawer(Wex::DeviceContext& deviceContext)
 	textSize = deviceContext.GetTextSize();
 }
 
+void TextDrawer::Fill(int left, int right, int lineNumber, COLORREF color)
+{
+	Wex::Rect lineRect
+	{
+		Wex::Point{ left, lineNumber * textSize.cy },
+		Wex::Size{ right - left, textSize.cy }
+	};
+	deviceContext.FillSolidRect(lineRect, color);
+}
+
 void TextDrawer::DrawLine(
 	int left,
-	int width,
+	int right,
 	int lineNumber,
 	const ColoredLine& line)
 {
@@ -35,6 +45,8 @@ void TextDrawer::DrawLine(
 			DrawCharacter(characterRect, character);
 			nextLeft += characterWidth;
 			column += columns;
+			if (nextLeft >= right)
+				return;
 		}
 	}
 }

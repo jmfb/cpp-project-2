@@ -14,7 +14,6 @@ void ConsoleWindow::SetupClass(WNDCLASSEX& windowClass)
 bool ConsoleWindow::OnCreate(CREATESTRUCT* cs)
 {
 	promptWindow.Create(GetHandle(), "", ChildWindowStyle);
-	promptWindow.SetFocus();
 	displayWindow.Create(GetHandle(), "", ChildWindowStyle);
 	promptWindow.SetPrompt(console.GetPrompt());
 	displayWindow.SetLines(console.GetDisplay());

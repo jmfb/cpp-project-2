@@ -9,6 +9,7 @@ namespace ColorScheme
 		static const auto Margin = RGB(51, 51, 51);
 		static const auto SelectedText = RGB(51, 153, 255);
 		static const auto MatchingText = RGB(119, 56, 0);
+		static const auto Popup = RGB(0, 0, 0);
 	}
 
 	namespace Text

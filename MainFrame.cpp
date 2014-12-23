@@ -2,13 +2,16 @@
 #include "MainFrame.h"
 
 MainFrame::MainFrame()
-	: consoleWindow{ *this }
+	: consoleWindow{ *this }, superBox{ *this }
 {
 }
 
 void MainFrame::OnActivate(short state, bool minimized, HWND hwnd)
 {
-	consoleWindow.SetFocus();
+	if (superBox.IsValid())
+		superBox.SetFocus();
+	else
+		consoleWindow.SetFocus();
 }
 
 void MainFrame::SetupClass(WNDCLASSEX& windowClass)
@@ -18,13 +21,25 @@ void MainFrame::SetupClass(WNDCLASSEX& windowClass)
 
 bool MainFrame::OnCreate(CREATESTRUCT* cs)
 {
+	superBox.Create(GetHandle(), "", ChildWindowStyle);
 	consoleWindow.Create(GetHandle(), "", ChildWindowStyle);
+	superBox.SetFocus();
 	return true;
 }
 
 void MainFrame::OnSize(int type, const Wex::Size& size)
 {
 	consoleWindow.Move(GetClient());
+	if (superBox.IsValid())
+	{
+		auto rect = GetClient();
+		auto center = rect.GetCenter();
+		rect.left = center.x - 200;
+		rect.right = center.x + 200;
+		rect.top = center.y - 200;
+		rect.bottom = center.y + 200;
+		superBox.Move(rect);
+	}
 }
 
 void MainFrame::OnDestroy()
@@ -59,5 +74,18 @@ void MainFrame::OnCloseProject()
 void MainFrame::OnExit()
 {
 	Close();
+}
+
+void MainFrame::OnOpenSelection(const std::string& value)
+{
+	MsgBox(value);
+	superBox.Close();
+	consoleWindow.SetFocus();
+}
+
+void MainFrame::OnCancelSearch()
+{
+	superBox.Close();
+	consoleWindow.SetFocus();
 }
 

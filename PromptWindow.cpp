@@ -23,9 +23,6 @@ bool PromptWindow::OnCreate(CREATESTRUCT* cs)
 	font.Create("Consolas", Wex::Font::CalculateHeight(deviceContext, 10));
 	deviceContext.Select(font);
 	textSize = deviceContext.GetTextSize();
-	CreateSolidCaret(2, textSize.cy);
-	::SetCaretPos(0, 0);
-	ShowCaret();
 	return true;
 }
 
@@ -44,7 +41,8 @@ void PromptWindow::OnPaint()
 	deviceContext.DrawText(prompt, promptRect);
 	auto commandRect = client - promptRect;
 	deviceContext.DrawText(command, commandRect);
-	::SetCaretPos(textSize.cx * (prompt.size() + command.size()), 0);
+	if (::GetFocus() == GetHandle())
+		::SetCaretPos(textSize.cx * (prompt.size() + command.size()), 0);
 }
 
 void PromptWindow::OnChar(int c, int count, unsigned long flags)
@@ -75,5 +73,17 @@ void PromptWindow::SetPrompt(const std::string& value)
 {
 	prompt = value;
 	Invalidate(false);
+}
+
+void PromptWindow::OnSetFocus(HWND hwnd)
+{
+	CreateSolidCaret(2, textSize.cy);
+	::SetCaretPos(textSize.cx * (prompt.size() + command.size()), 0);
+	ShowCaret();
+}
+
+void PromptWindow::OnKillFocus(HWND hwnd)
+{
+	::DestroyCaret();
 }
 

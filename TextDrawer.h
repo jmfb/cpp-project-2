@@ -14,9 +14,10 @@ public:
 
 	TextDrawer& operator=(const TextDrawer& rhs) = delete;
 
+	void Fill(int left, int width, int lineNumber, COLORREF color);
 	void DrawLine(
 		int left,
-		int width,
+		int right,
 		int lineNumber,
 		const ColoredLine& line);
 

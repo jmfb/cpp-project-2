@@ -66,6 +66,25 @@
 					<File>DisplayWindow.cpp</File>
 					<File>DisplayWindow.Test.cpp</File>
 				</Folder>
+				<Folder name="Super Box">
+					<Folder name="SuperBox">
+						<File>SuperBox.h</File>
+						<File>SuperBox.cpp</File>
+						<File>SuperBox.Test.cpp</File>
+						<File>SuperBoxEvents.h</File>
+					</Folder>
+					<Folder name="SuperBoxResults">
+						<File>SuperBoxResults.h</File>
+						<File>SuperBoxResults.cpp</File>
+						<File>SuperBoxResults.Test.cpp</File>
+					</Folder>
+					<Folder name="SuperBoxInput">
+						<File>SuperBoxInput.h</File>
+						<File>SuperBoxInput.cpp</File>
+						<File>SuperBoxInput.Test.cpp</File>
+						<File>SuperBoxInputEvents.h</File>
+					</Folder>
+				</Folder>
 			</Folder>
 			<Folder name="Models">
 				<Folder name="Document">
@@ -127,7 +146,7 @@
 					<File>Project.Test.cpp</File>
 				</Folder>
 			</Folder>
-			<Folder name="Utilities">
+			<Folder name="Colored Text">
 				<Folder name="TextDrawer">
 					<File>TextDrawer.h</File>
 					<File>TextDrawer.cpp</File>

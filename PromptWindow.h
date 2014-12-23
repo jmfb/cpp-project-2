@@ -19,6 +19,8 @@ public:
 	bool OnCreate(CREATESTRUCT* cs) override;
 	void OnPaint() override;
 	void OnChar(int c, int count, unsigned long flags) override;
+	void OnSetFocus(HWND hwnd) override;
+	void OnKillFocus(HWND hwnd) override;
 
 	void SetPrompt(const std::string& value);
 
