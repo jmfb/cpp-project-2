@@ -12,11 +12,13 @@ public:
 	Project& operator=(const Project& rhs) = default;
 
 	static const std::string Extension;
-	
+
 	void New(const std::string& directory, const std::string& name);
 	void Open(const std::string& fileName);
 	void Save();
+	void Close();
 
+	bool IsOpen() const;
 	const std::string& GetFileName() const;
 	const std::string& GetName() const;
 	const std::string& GetStandard() const;
@@ -50,6 +52,9 @@ public:
 	void SetLibraries(const std::vector<std::string>& value);
 	void SetProjectReferences(const std::vector<std::string>& value);
 
+	std::string GetProjectDirectory() const;
+	std::vector<std::string> GetAllFiles() const;
+
 private:
 	void LoadXml(const std::string& text);
 	void LoadJson(const std::string& text);
@@ -57,6 +62,7 @@ private:
 
 private:
 	friend class ProjectTest;
+	bool isOpen = false;
 	std::string fileName;
 	std::string name;
 	std::string standard;

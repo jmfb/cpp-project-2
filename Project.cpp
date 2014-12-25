@@ -29,6 +29,7 @@ const std::string Project::Extension = "cpp-project";
 
 void Project::New(const std::string& directory, const std::string& name)
 {
+	isOpen = true;
 	auto projectDirectory = Wex::Path::Combine(directory, name);
 	fileName = Wex::Path::Combine(projectDirectory, name + "." + Extension);
 	this->name = name;
@@ -50,6 +51,7 @@ void Project::New(const std::string& directory, const std::string& name)
 
 void Project::Open(const std::string& fileName)
 {
+	isOpen = true;
 	this->fileName = fileName;
 
 	auto text = Wex::File::ReadAllText(fileName);
@@ -71,6 +73,16 @@ void Project::Save()
 	Wex::Directory::Create(projectDirectory);
 	std::ofstream out(fileName.c_str());
 	out << ToJson();
+}
+
+void Project::Close()
+{
+	isOpen = false;
+}
+
+bool Project::IsOpen() const
+{
+	return isOpen;
 }
 
 const std::string& Project::GetFileName() const
@@ -226,6 +238,44 @@ void Project::SetLibraries(const std::vector<std::string>& value)
 void Project::SetProjectReferences(const std::vector<std::string>& value)
 {
 	projectReferences = value;
+}
+
+std::string Project::GetProjectDirectory() const
+{
+	return Wex::Path::GetPath(fileName);
+}
+
+std::vector<std::string> Project::GetAllFiles() const
+{
+	auto projectDirectory = GetProjectDirectory();
+	auto rootFiles = Wex::Directory::Find(projectDirectory, "*");
+	std::vector<std::pair<std::string, Wex::FileInfo>> results;
+	for (const auto& file : rootFiles)
+		results.emplace_back("", file);
+	std::vector<std::string> files;
+	for (auto index = 0ul; index < results.size(); ++index)
+	{
+		auto subdirectory = results[index].first;
+		auto fileInfo = results[index].second;
+		if (fileInfo.IsFile())
+		{
+			files.push_back(Wex::Path::Combine(subdirectory, fileInfo.GetFileName()));
+		}
+		else
+		{
+			auto relativeDirectory = Wex::Path::Combine(
+				subdirectory,
+				fileInfo.GetFileName());
+			if (relativeDirectory == outputFolder)
+				continue;
+			auto subdirectoryFiles = Wex::Directory::Find(
+				Wex::Path::Combine(projectDirectory, relativeDirectory),
+				"*");
+			for (const auto& file : subdirectoryFiles)
+				results.emplace_back(relativeDirectory, file);
+		}
+	}
+	return files;
 }
 
 void Project::LoadXml(const std::string& text)

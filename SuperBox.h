@@ -3,6 +3,7 @@
 #include "SuperBoxInput.h"
 #include "SuperBoxResults.h"
 #include "SuperBoxEvents.h"
+#include "Project.h"
 #include <vector>
 #include <string>
 
@@ -11,7 +12,7 @@ class SuperBox :
 	public SuperBoxInputEvents
 {
 public:
-	SuperBox(SuperBoxEvents& events);
+	SuperBox(SuperBoxEvents& events, Project& project);
 	SuperBox(const SuperBox& rhs) = delete;
 	~SuperBox() = default;
 
@@ -30,9 +31,12 @@ public:
 	void OnUpdateFilter(const std::string& filter) override;
 	void OnCancelSearch() override;
 
+	static bool PartialWordMatch(const std::string& filter, const std::string& value);
+
 private:
 	friend class SuperBoxTest;
 	SuperBoxEvents* events = nullptr;
+	Project* project = nullptr;
 	SuperBoxInput input;
 	SuperBoxResults results;
 	std::vector<std::string> possibleResults;

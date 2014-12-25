@@ -32,6 +32,14 @@ namespace ColorScheme
 		static const auto Project = RGB(189, 99, 197);
 	}
 
+	namespace SuperBox
+	{
+		static const auto Match = RGB(189, 99, 197);
+		static const auto Directory = RGB(87, 166, 74);
+		static const auto Extension = RGB(140, 140, 140);
+		static const auto File = RGB(220, 220, 220);
+	}
+
 	namespace CPlusPlus
 	{
 		static const auto Comment = RGB(87, 166, 74);

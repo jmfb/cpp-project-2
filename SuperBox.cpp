@@ -4,8 +4,8 @@
 #include <Wex/MemoryDeviceContext.h>
 #include "ColorScheme.h"
 
-SuperBox::SuperBox(SuperBoxEvents& events)
-	: events{ &events }, input{ *this }
+SuperBox::SuperBox(SuperBoxEvents& events, Project& project)
+	: events{ &events }, project{ &project }, input{ *this }
 {
 }
 
@@ -18,13 +18,11 @@ void SuperBox::SetupClass(WNDCLASSEX& windowClass)
 
 bool SuperBox::OnCreate(CREATESTRUCT* cs)
 {
-	//TODO: Load possibleResults
-	possibleResults.clear();
-	possibleResults.push_back("Hello");
-	possibleResults.push_back("World");
+	possibleResults = project->GetAllFiles();
 	input.Create(GetHandle(), "", ChildWindowStyle);
 	input.SetFocus();
 	results.Create(GetHandle(), "", ChildWindowStyle);
+	OnUpdateFilter("");
 	return true;
 }
 
@@ -70,12 +68,41 @@ void SuperBox::OnSelectNext()
 
 void SuperBox::OnUpdateFilter(const std::string& filter)
 {
-	//TODO: filter results
-	results.SetResults(filter, possibleResults);
+	std::vector<std::string> matches;
+	for (const auto& possibleResult : possibleResults)
+	{
+		if (!PartialWordMatch(filter, possibleResult))
+			continue;
+		matches.push_back(possibleResult);
+		if (matches.size() >= 20)
+			break;
+	}
+	results.SetResults(filter, matches);
 }
 
 void SuperBox::OnCancelSearch()
 {
 	events->OnCancelSearch();
+}
+
+bool SuperBox::PartialWordMatch(const std::string& filter, const std::string& value)
+{
+	if (filter.empty())
+		return true;
+
+	auto iter = value.begin();
+	for (auto c : filter)
+	{
+		for (; iter != value.end(); ++iter)
+		{
+			if (std::tolower(c) == std::tolower(*iter))
+				break;
+		}
+		if (iter == value.end())
+			return false;
+		++iter;
+	}
+
+	return true;
 }
 

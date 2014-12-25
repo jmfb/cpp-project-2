@@ -19,6 +19,7 @@ void SuperBoxInput::SetupClass(WNDCLASSEX& windowClass)
 
 bool SuperBoxInput::OnCreate(CREATESTRUCT* cs)
 {
+	value.clear();
 	Wex::ClientDeviceContext deviceContext{ GetHandle() };
 	font.Create("Consolas", Wex::Font::CalculateHeight(deviceContext, 10));
 	deviceContext.Select(font);

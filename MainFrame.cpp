@@ -1,9 +1,14 @@
 #include <Wex/WindowsInclude.h>
 #include "MainFrame.h"
+#include "resource.h"
+#include <Wex/Path.h>
+#include <Wex/String.h>
 
 MainFrame::MainFrame()
-	: consoleWindow{ *this }, superBox{ *this }
+	: consoleWindow{ *this }, superBox{ *this, project }
 {
+	HandleCommand(ID_SUPERBOX, &MainFrame::OnSuperBox);
+	HandleCommand(ID_CLOSE_DOCUMENT, &MainFrame::OnCloseDocument);
 }
 
 void MainFrame::OnActivate(short state, bool minimized, HWND hwnd)
@@ -21,15 +26,21 @@ void MainFrame::SetupClass(WNDCLASSEX& windowClass)
 
 bool MainFrame::OnCreate(CREATESTRUCT* cs)
 {
-	superBox.Create(GetHandle(), "", ChildWindowStyle);
+	document = std::make_shared<Document>();
 	consoleWindow.Create(GetHandle(), "", ChildWindowStyle);
-	superBox.SetFocus();
+
+	documentView.Create(GetHandle(), "", ChildWindowStyle);
+	documentView.SetDocument(document);
+	documentView.Hide();
+	activeWindow = consoleWindow;
+
+	consoleWindow.SetFocus();
 	return true;
 }
 
 void MainFrame::OnSize(int type, const Wex::Size& size)
 {
-	consoleWindow.Move(GetClient());
+	activeWindow.Move(GetClient());
 	if (superBox.IsValid())
 	{
 		auto rect = GetClient();
@@ -68,6 +79,7 @@ void MainFrame::OnOpenProject(const std::string& fullPath)
 
 void MainFrame::OnCloseProject()
 {
+	project.Close();
 	consoleWindow.GetConsole().SwitchMode(Console::Initial);
 }
 
@@ -78,14 +90,48 @@ void MainFrame::OnExit()
 
 void MainFrame::OnOpenSelection(const std::string& value)
 {
-	MsgBox(value);
+	auto fullPath = Wex::Path::Combine(project.GetProjectDirectory(), value);
+	if (Wex::String::ToLower(fullPath) == Wex::String::ToLower(project.GetFileName()))
+		MsgBox("Edit Project");
+	else
+	{
+		SwitchActiveWindow(documentView);
+		document->Open(fullPath);
+		documentView.Invalidate(false);
+	}
 	superBox.Close();
-	consoleWindow.SetFocus();
+	activeWindow.SetFocus();
 }
 
 void MainFrame::OnCancelSearch()
 {
 	superBox.Close();
 	consoleWindow.SetFocus();
+}
+
+void MainFrame::OnSuperBox()
+{
+	if (!project.IsOpen() || superBox.IsValid())
+		return;
+	superBox.Create(GetHandle(), "", ChildWindowStyle);
+	OnSize(0, {});
+	activeWindow.SetPos(superBox, {}, SWP_NOSIZE|SWP_NOMOVE);
+	superBox.SetFocus();
+}
+
+void MainFrame::OnCloseDocument()
+{
+	SwitchActiveWindow(consoleWindow);
+}
+
+void MainFrame::SwitchActiveWindow(Wex::Window window)
+{
+	if (activeWindow == window)
+		return;
+	window.Move(GetClient());
+	window.Show();
+	activeWindow.Hide();
+	window.SetFocus();
+	activeWindow = window;
 }
 

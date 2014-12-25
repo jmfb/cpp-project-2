@@ -35,11 +35,18 @@ public:
 
 	void OnOpenSelection(const std::string& value) override;
 	void OnCancelSearch() override;
-	
+
+	void OnSuperBox();
+	void OnCloseDocument();
+
+private:
+	void SwitchActiveWindow(Wex::Window window);
+
 private:
 	friend class MainFrameTest;
 	DocumentView documentView;
 	ConsoleWindow consoleWindow;
+	Wex::Window activeWindow;
 	Project project;
 	std::shared_ptr<Document> document;
 	SuperBox superBox;

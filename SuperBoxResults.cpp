@@ -15,6 +15,8 @@ void SuperBoxResults::SetupClass(WNDCLASSEX& windowClass)
 
 bool SuperBoxResults::OnCreate(CREATESTRUCT* cs)
 {
+	selection = 0;
+	results.clear();
 	Wex::ClientDeviceContext deviceContext{ GetHandle() };
 	font.Create("Consolas", Wex::Font::CalculateHeight(deviceContext, 10));
 	deviceContext.Select(font);
@@ -86,10 +88,44 @@ const std::string& SuperBoxResults::GetSelection() const
 
 ColoredLine SuperBoxResults::Colorize(const std::string& result, COLORREF background) const
 {
-	//TODO: fancy matching logic based on filter
-	return
+	ColoredLine line;
+
+	std::vector<bool> matches;
+
+	auto iter = result.begin();
+	for (auto c : filter)
 	{
-		{ ColorScheme::Console::Default, background, result }
-	};
+		for (; iter != result.end(); ++iter)
+		{
+			if (std::tolower(c) == std::tolower(*iter))
+			{
+				++iter;
+				matches.push_back(true);
+				break;
+			}
+			matches.push_back(false);
+		}
+	}
+
+	auto directoryPosition = result.rfind('\\');
+	auto hasDirectory = directoryPosition != std::string::npos;
+	auto extensionPosition = result.rfind('.');
+	auto hasExtension = extensionPosition != std::string::npos;
+
+	for (auto index = 0ul; index < result.size(); ++index)
+	{
+		auto isDirectory = hasDirectory && index <= directoryPosition;
+		auto isMatch = index < matches.size() && matches[index];
+		auto isExtension = hasExtension && index >= extensionPosition;
+
+		auto color = isMatch ? ColorScheme::SuperBox::Match :
+			isDirectory ? ColorScheme::SuperBox::Directory :
+			isExtension ? ColorScheme::SuperBox::Extension :
+			ColorScheme::SuperBox::File;
+
+		line.emplace_back(color, background, result.substr(index, 1));
+	}
+
+	return line;
 }
 

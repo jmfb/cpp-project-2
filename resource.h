@@ -1,5 +1,10 @@
 #pragma once
 
+#define IDA_MAINFRAME 101
+
+#define ID_SUPERBOX 1001
+#define ID_CLOSE_DOCUMENT 1002
+
 #define VERSION_MAJOR 2
 #define VERSION_MINOR 0
 #define VERSION_REVISION 0
