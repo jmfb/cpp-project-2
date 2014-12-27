@@ -39,10 +39,14 @@ public:
 
 	void OnSuperBox();
 	void OnCloseDocument();
+	void OnNextFile();
+	void OnPreviousFile();
 
 private:
 	void SwitchActiveWindow(Wex::Window window);
+	void OpenDocument(const std::string& fullPath);
 	void ViewDocument(DocumentView* documentView);
+	static std::string SwitchFile(const std::string& fileName, int skip);
 
 private:
 	friend class MainFrameTest;

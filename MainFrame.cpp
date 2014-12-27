@@ -2,6 +2,7 @@
 #include "MainFrame.h"
 #include "resource.h"
 #include <Wex/Path.h>
+#include <Wex/File.h>
 #include <Wex/String.h>
 #include <Wex/Icon.h>
 #include <algorithm>
@@ -11,6 +12,8 @@ MainFrame::MainFrame()
 {
 	HandleCommand(ID_SUPERBOX, &MainFrame::OnSuperBox);
 	HandleCommand(ID_CLOSE_DOCUMENT, &MainFrame::OnCloseDocument);
+	HandleCommand(ID_NEXT_FILE, &MainFrame::OnNextFile);
+	HandleCommand(ID_PREVIOUS_FILE, &MainFrame::OnPreviousFile);
 }
 
 void MainFrame::SetupClass(WNDCLASSEX& windowClass)
@@ -106,18 +109,7 @@ void MainFrame::OnOpenSelection(const std::string& value)
 	if (Wex::String::ToLower(fullPath) == Wex::String::ToLower(project.GetFileName()))
 		MsgBox("Edit Project");
 	else
-	{
-		SwitchActiveWindow(documentWindow);
-		auto iter = std::find_if(
-			documentViews.begin(),
-			documentViews.end(),
-			[&](const DocumentView& view){ return view.IsFor(fullPath); });
-		if (iter == documentViews.end())
-			documentViews.emplace_back(fullPath);
-		else
-			documentViews.splice(documentViews.end(), documentViews, iter);
-		ViewDocument(&documentViews.back());
-	}
+		OpenDocument(fullPath);
 	superBox.Close();
 	activeWindow.SetFocus();
 }
@@ -150,6 +142,20 @@ void MainFrame::OnCloseDocument()
 		ViewDocument(&documentViews.back());
 }
 
+void MainFrame::OnNextFile()
+{
+	if (documentViews.empty())
+		return;
+	OpenDocument(SwitchFile(documentViews.back().GetFileName(), 1));
+}
+
+void MainFrame::OnPreviousFile()
+{
+	if (documentViews.empty())
+		return;
+	OpenDocument(SwitchFile(documentViews.back().GetFileName(), -1));
+}
+
 void MainFrame::SwitchActiveWindow(Wex::Window window)
 {
 	if (activeWindow == window)
@@ -161,6 +167,20 @@ void MainFrame::SwitchActiveWindow(Wex::Window window)
 	activeWindow = window;
 }
 
+void MainFrame::OpenDocument(const std::string& fullPath)
+{
+	SwitchActiveWindow(documentWindow);
+	auto iter = std::find_if(
+		documentViews.begin(),
+		documentViews.end(),
+		[&](const DocumentView& view){ return view.IsFor(fullPath); });
+	if (iter == documentViews.end())
+		documentViews.emplace_back(fullPath);
+	else
+		documentViews.splice(documentViews.end(), documentViews, iter);
+	ViewDocument(&documentViews.back());
+}
+
 void MainFrame::ViewDocument(DocumentView* documentView)
 {
 	const std::string applicationName{ "C++ IDE V2" };
@@ -169,5 +189,37 @@ void MainFrame::ViewDocument(DocumentView* documentView)
 	else
 		SetText(applicationName + ": " + documentView->GetTitle());
 	documentWindow.SetDocumentView(documentView);
+}
+
+std::string MainFrame::SwitchFile(const std::string& fileName, int skip)
+{
+	auto directory = Wex::Path::GetPath(fileName);
+	auto title = Wex::Path::GetTitle(fileName);
+	auto extension = Wex::Path::GetExtension(fileName);
+	if (Wex::Path::GetExtension(title) == "Test"_ics && extension == "cpp"_ics)
+	{
+		title = Wex::Path::GetTitle(title);
+		extension = "Test.cpp";
+	}
+
+	auto possibleFileExtensions{ "h", "inl", "cpp", "Test.cpp" };
+	std::vector<std::string> existingFiles;
+	auto index = 0;
+	for (auto possibleFileExtension : possibleFileExtensions)
+	{
+		auto possibleName = title + "."_s + possibleFileExtension;
+		auto possibleFile = Wex::Path::Combine(directory, possibleName);
+		if (Wex::File::Exists(possibleFile))
+		{
+			existingFiles.push_back(possibleFile);
+			if (Wex::String::AreEqual(possibleFileExtension, extension))
+				index = existingFiles.size() - 1;
+		}
+	}
+
+	if (existingFiles.empty())
+		return fileName;
+	auto newIndex = (index + skip + existingFiles.size()) % existingFiles.size();
+	return existingFiles[newIndex];
 }
 

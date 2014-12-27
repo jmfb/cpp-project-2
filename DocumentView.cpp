@@ -22,6 +22,11 @@ const std::string& DocumentView::GetTitle() const
 	return document.GetFileName();
 }
 
+const std::string& DocumentView::GetFileName() const
+{
+	return document.GetFileName();
+}
+
 void DocumentView::SetViewSize(int visibleLineCount)
 {
 	this->visibleLineCount = visibleLineCount;
