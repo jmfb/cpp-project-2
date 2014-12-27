@@ -35,12 +35,14 @@ void DocumentWindow::OnPaint()
 	Wex::PaintDeviceContext paintDeviceContext{ GetHandle() };
 	Wex::MemoryDeviceContext deviceContext{ paintDeviceContext };
 	deviceContext.FillSolidRect(GetClient(), ColorScheme::Background::Default);
+	if (!documentView)
+		return;
 	deviceContext.Select(font);
 	auto client = GetClient();
 	TextDrawer drawer{ deviceContext };
-	for (auto lineNumber = 0; lineNumber < documentView.GetLineCount(); ++lineNumber)
+	for (auto lineNumber = 0; lineNumber < documentView->GetLineCount(); ++lineNumber)
 	{
-		auto parts = CPlusPlusColorer::Color(documentView.GetLine(lineNumber));
+		auto parts = CPlusPlusColorer::Color(documentView->GetLine(lineNumber));
 		//TODO: modify for selection, find results, etc.
 		drawer.DrawLine(client.left, client.right, lineNumber, parts);
 	}
@@ -48,25 +50,33 @@ void DocumentWindow::OnPaint()
 
 void DocumentWindow::OnSize(int type, const Wex::Size& size)
 {
+	if (!documentView)
+		return;
 	auto clientHeight = GetClient().GetHeight();
 	auto visibleLineCount = clientHeight / textSize.cy;
-	documentView.SetViewSize(visibleLineCount);
+	documentView->SetViewSize(visibleLineCount);
 }
 
 void DocumentWindow::OnPageDown()
 {
-	documentView.PageDown();
+	if (!documentView)
+		return;
+	documentView->PageDown();
 	Invalidate(false);
 }
 
 void DocumentWindow::OnPageUp()
 {
-	documentView.PageUp();
+	if (!documentView)
+		return;
+	documentView->PageUp();
 	Invalidate(false);
 }
 
-void DocumentWindow::SetDocument(std::shared_ptr<Document> value)
+void DocumentWindow::SetDocumentView(DocumentView* value)
 {
-	documentView.SetDocument(value);
+	documentView = value;
+	OnSize(0, {});
+	Invalidate(false);
 }
 

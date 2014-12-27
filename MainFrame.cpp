@@ -4,6 +4,7 @@
 #include <Wex/Path.h>
 #include <Wex/String.h>
 #include <Wex/Icon.h>
+#include <algorithm>
 
 MainFrame::MainFrame()
 	: consoleWindow{ *this }, superBox{ *this, project }
@@ -24,7 +25,7 @@ void MainFrame::OnActivate(short state, bool minimized, HWND hwnd)
 	if (superBox.IsValid())
 		superBox.SetFocus();
 	else
-		consoleWindow.SetFocus();
+		activeWindow.SetFocus();
 }
 
 void MainFrame::OnCommand(WORD id, WORD code, HWND from)
@@ -40,14 +41,10 @@ void MainFrame::OnCommand(WORD id, WORD code, HWND from)
 
 bool MainFrame::OnCreate(CREATESTRUCT* cs)
 {
-	document = std::make_shared<Document>();
 	consoleWindow.Create(GetHandle(), "", ChildWindowStyle);
-
 	documentWindow.Create(GetHandle(), "", ChildWindowStyle);
-	documentWindow.SetDocument(document);
 	documentWindow.Hide();
 	activeWindow = consoleWindow;
-
 	consoleWindow.SetFocus();
 	return true;
 }
@@ -94,6 +91,7 @@ void MainFrame::OnOpenProject(const std::string& fullPath)
 void MainFrame::OnCloseProject()
 {
 	project.Close();
+	documentViews.clear();
 	consoleWindow.GetConsole().SwitchMode(Console::Initial);
 }
 
@@ -110,8 +108,15 @@ void MainFrame::OnOpenSelection(const std::string& value)
 	else
 	{
 		SwitchActiveWindow(documentWindow);
-		document->Open(fullPath);
-		documentWindow.Invalidate(false);
+		auto iter = std::find_if(
+			documentViews.begin(),
+			documentViews.end(),
+			[&](const DocumentView& view){ return view.IsFor(fullPath); });
+		if (iter == documentViews.end())
+			documentViews.emplace_back(fullPath);
+		else
+			documentViews.splice(documentViews.end(), documentViews, iter);
+		documentWindow.SetDocumentView(&documentViews.back());
 	}
 	superBox.Close();
 	activeWindow.SetFocus();
@@ -120,7 +125,7 @@ void MainFrame::OnOpenSelection(const std::string& value)
 void MainFrame::OnCancelSearch()
 {
 	superBox.Close();
-	consoleWindow.SetFocus();
+	activeWindow.SetFocus();
 }
 
 void MainFrame::OnSuperBox()
@@ -135,7 +140,14 @@ void MainFrame::OnSuperBox()
 
 void MainFrame::OnCloseDocument()
 {
-	SwitchActiveWindow(consoleWindow);
+	if (documentViews.empty())
+		return;
+	documentWindow.SetDocumentView(nullptr);
+	documentViews.pop_back();
+	if (documentViews.empty())
+		SwitchActiveWindow(consoleWindow);
+	else
+		documentWindow.SetDocumentView(&documentViews.back());
 }
 
 void MainFrame::SwitchActiveWindow(Wex::Window window)

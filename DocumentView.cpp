@@ -1,10 +1,20 @@
 #include <Wex/WindowsInclude.h>
 #include "DocumentView.h"
 
-void DocumentView::SetDocument(std::shared_ptr<Document> document)
+DocumentView::DocumentView(const std::string& fullPath)
+{
+	Open(fullPath);
+}
+
+void DocumentView::Open(const std::string& fullPath)
 {
 	firstVisibleLine = 0;
-	this->document = document;
+	document.Open(fullPath);
+}
+
+bool DocumentView::IsFor(const std::string& fullPath) const
+{
+	return document.Is(fullPath);
 }
 
 void DocumentView::SetViewSize(int visibleLineCount)
@@ -14,21 +24,19 @@ void DocumentView::SetViewSize(int visibleLineCount)
 
 int DocumentView::GetLineCount() const
 {
-	if (!document)
-		return 0;
-	auto remainingLines = document->GetLineCount() - firstVisibleLine;
+	auto remainingLines = document.GetLineCount() - firstVisibleLine;
 	return std::min(remainingLines, visibleLineCount + 1);
 }
 
 const std::string& DocumentView::GetLine(int lineNumber) const
 {
-	return document->GetLine(lineNumber + firstVisibleLine);
+	return document.GetLine(lineNumber + firstVisibleLine);
 }
 
 void DocumentView::PageDown()
 {
 	auto pageDownLine = firstVisibleLine + visibleLineCount;
-	if (pageDownLine >= document->GetLineCount())
+	if (pageDownLine >= document.GetLineCount())
 		return;
 	firstVisibleLine = pageDownLine;
 }

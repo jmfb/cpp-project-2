@@ -2,7 +2,6 @@
 #include <Wex/CustomWindow.h>
 #include <Wex/Font.h>
 #include <Wex/Size.h>
-#include <memory>
 #include "DocumentView.h"
 
 class DocumentWindow : public Wex::CustomWindow<DocumentWindow>
@@ -22,13 +21,13 @@ public:
 
 	void OnPageDown();
 	void OnPageUp();
-	
-	void SetDocument(std::shared_ptr<Document> value);
+
+	void SetDocumentView(DocumentView* value);
 
 private:
 	friend class DocumentWindowTest;
 	Wex::Font font;
 	Wex::Size textSize;
-	DocumentView documentView;
+	DocumentView* documentView = nullptr;
 };
 

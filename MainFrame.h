@@ -1,11 +1,11 @@
 #pragma once
 #include <Wex/CustomWindow.h>
-#include <memory>
+#include <list>
 #include "DocumentWindow.h"
-#include "Document.h"
 #include "ConsoleWindow.h"
-#include "Project.h"
 #include "SuperBox.h"
+#include "Project.h"
+#include "DocumentView.h"
 
 class MainFrame :
 	public Wex::CustomWindow<MainFrame>,
@@ -47,9 +47,9 @@ private:
 	friend class MainFrameTest;
 	DocumentWindow documentWindow;
 	ConsoleWindow consoleWindow;
+	SuperBox superBox;
 	Wex::Window activeWindow;
 	Project project;
-	std::shared_ptr<Document> document;
-	SuperBox superBox;
+	std::list<DocumentView> documentViews;
 };
 

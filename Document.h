@@ -12,12 +12,14 @@ public:
 	Document& operator=(const Document& rhs) = default;
 
 	void Open(const std::string& fileName);
+	bool Is(const std::string& fileName) const;
 
 	int GetLineCount() const;
 	const std::string& GetLine(int lineNumber) const;
 
 private:
 	friend class DocumentTest;
+	std::string fileName;
 	std::vector<std::string> lines;
 };
 
