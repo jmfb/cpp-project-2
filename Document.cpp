@@ -20,6 +20,11 @@ bool Document::Is(const std::string& fileName) const
 		Wex::String::ToLower(fileName);
 }
 
+const std::string& Document::GetFileName() const
+{
+	return fileName;
+}
+
 int Document::GetLineCount() const
 {
 	return lines.size();

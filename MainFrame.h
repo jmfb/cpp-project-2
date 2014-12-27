@@ -42,6 +42,7 @@ public:
 
 private:
 	void SwitchActiveWindow(Wex::Window window);
+	void ViewDocument(DocumentView* documentView);
 
 private:
 	friend class MainFrameTest;

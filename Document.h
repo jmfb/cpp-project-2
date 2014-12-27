@@ -13,6 +13,7 @@ public:
 
 	void Open(const std::string& fileName);
 	bool Is(const std::string& fileName) const;
+	const std::string& GetFileName() const;
 
 	int GetLineCount() const;
 	const std::string& GetLine(int lineNumber) const;

@@ -116,7 +116,7 @@ void MainFrame::OnOpenSelection(const std::string& value)
 			documentViews.emplace_back(fullPath);
 		else
 			documentViews.splice(documentViews.end(), documentViews, iter);
-		documentWindow.SetDocumentView(&documentViews.back());
+		ViewDocument(&documentViews.back());
 	}
 	superBox.Close();
 	activeWindow.SetFocus();
@@ -142,12 +142,12 @@ void MainFrame::OnCloseDocument()
 {
 	if (documentViews.empty())
 		return;
-	documentWindow.SetDocumentView(nullptr);
+	ViewDocument(nullptr);
 	documentViews.pop_back();
 	if (documentViews.empty())
 		SwitchActiveWindow(consoleWindow);
 	else
-		documentWindow.SetDocumentView(&documentViews.back());
+		ViewDocument(&documentViews.back());
 }
 
 void MainFrame::SwitchActiveWindow(Wex::Window window)
@@ -159,5 +159,15 @@ void MainFrame::SwitchActiveWindow(Wex::Window window)
 	activeWindow.Hide();
 	window.SetFocus();
 	activeWindow = window;
+}
+
+void MainFrame::ViewDocument(DocumentView* documentView)
+{
+	const std::string applicationName{ "C++ IDE V2" };
+	if (documentView == nullptr)
+		SetText(applicationName);
+	else
+		SetText(applicationName + ": " + documentView->GetTitle());
+	documentWindow.SetDocumentView(documentView);
 }
 

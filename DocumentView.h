@@ -13,6 +13,7 @@ public:
 
 	void Open(const std::string& fullPath);
 	bool IsFor(const std::string& fullPath) const;
+	const std::string& GetTitle() const;
 	void SetViewSize(int visibleLineCount);
 	int GetLineCount() const;
 	const std::string& GetLine(int lineNumber) const;

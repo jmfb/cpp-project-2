@@ -17,6 +17,11 @@ bool DocumentView::IsFor(const std::string& fullPath) const
 	return document.Is(fullPath);
 }
 
+const std::string& DocumentView::GetTitle() const
+{
+	return document.GetFileName();
+}
+
 void DocumentView::SetViewSize(int visibleLineCount)
 {
 	this->visibleLineCount = visibleLineCount;
