@@ -1,7 +1,7 @@
 #pragma once
 #include <Wex/CustomWindow.h>
 #include <memory>
-#include "DocumentView.h"
+#include "DocumentWindow.h"
 #include "Document.h"
 #include "ConsoleWindow.h"
 #include "Project.h"
@@ -22,6 +22,7 @@ public:
 	static void SetupClass(WNDCLASSEX& windowClass);
 
 	void OnActivate(short state, bool minimized, HWND hwnd) override;
+	void OnCommand(WORD id, WORD code, HWND from) override;
 	bool OnCreate(CREATESTRUCT* cs) override;
 	void OnSize(int type, const Wex::Size& size) override;
 	void OnDestroy() override;
@@ -44,7 +45,7 @@ private:
 
 private:
 	friend class MainFrameTest;
-	DocumentView documentView;
+	DocumentWindow documentWindow;
 	ConsoleWindow consoleWindow;
 	Wex::Window activeWindow;
 	Project project;

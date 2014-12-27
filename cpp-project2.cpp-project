@@ -44,10 +44,10 @@
 					<File>TabStrip.h</File>
 					<File>TabStrip.Test.cpp</File>
 				</Folder>
-				<Folder name="DocumentView">
-					<File>DocumentView.h</File>
-					<File>DocumentView.cpp</File>
-					<File>DocumentView.Test.cpp</File>
+				<Folder name="DocumentWindow">
+					<File>DocumentWindow.h</File>
+					<File>DocumentWindow.cpp</File>
+					<File>DocumentWindow.Test.cpp</File>
 				</Folder>
 				<Folder name="ConsoleWindow">
 					<File>ConsoleWindow.h</File>
@@ -88,9 +88,16 @@
 			</Folder>
 			<Folder name="Models">
 				<Folder name="Document">
-					<File>Document.h</File>
-					<File>Document.cpp</File>
-					<File>Document.Test.cpp</File>
+					<Folder name="Document">
+						<File>Document.h</File>
+						<File>Document.cpp</File>
+						<File>Document.Test.cpp</File>
+					</Folder>
+					<Folder name="DocumentView">
+						<File>DocumentView.h</File>
+						<File>DocumentView.cpp</File>
+						<File>DocumentView.Test.cpp</File>
+					</Folder>
 				</Folder>
 				<Folder name="Console">
 					<Folder name="Console">
@@ -174,6 +181,7 @@
 			<File>manifest.xml</File>
 			<File>resource.h</File>
 			<File>resource.rc</File>
+			<File>MainFrame.ico</File>
 			<Folder name="JsonCpp">
 				<File>json\json_reader.cpp</File>
 				<File>json\json_value.cpp</File>

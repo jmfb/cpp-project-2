@@ -3,12 +3,20 @@
 #include "resource.h"
 #include <Wex/Path.h>
 #include <Wex/String.h>
+#include <Wex/Icon.h>
 
 MainFrame::MainFrame()
 	: consoleWindow{ *this }, superBox{ *this, project }
 {
 	HandleCommand(ID_SUPERBOX, &MainFrame::OnSuperBox);
 	HandleCommand(ID_CLOSE_DOCUMENT, &MainFrame::OnCloseDocument);
+}
+
+void MainFrame::SetupClass(WNDCLASSEX& windowClass)
+{
+	windowClass.lpszClassName = "MainFrame";
+	windowClass.hIcon = Wex::Icon::LoadLarge(IDI_MAINFRAME);
+	windowClass.hIconSm = Wex::Icon::LoadSmall(IDI_MAINFRAME);
 }
 
 void MainFrame::OnActivate(short state, bool minimized, HWND hwnd)
@@ -19,9 +27,15 @@ void MainFrame::OnActivate(short state, bool minimized, HWND hwnd)
 		consoleWindow.SetFocus();
 }
 
-void MainFrame::SetupClass(WNDCLASSEX& windowClass)
+void MainFrame::OnCommand(WORD id, WORD code, HWND from)
 {
-	windowClass.lpszClassName = "MainFrame";
+	if (id >= ID_FIRST_EDITOR_COMMAND &&
+		id <= ID_LAST_EDITOR_COMMAND &&
+		activeWindow == documentWindow &&
+		documentWindow.IsValid())
+		documentWindow.OnCommand(id, code, from);
+	else
+		Wex::CustomWindow<MainFrame>::OnCommand(id, code, from);
 }
 
 bool MainFrame::OnCreate(CREATESTRUCT* cs)
@@ -29,9 +43,9 @@ bool MainFrame::OnCreate(CREATESTRUCT* cs)
 	document = std::make_shared<Document>();
 	consoleWindow.Create(GetHandle(), "", ChildWindowStyle);
 
-	documentView.Create(GetHandle(), "", ChildWindowStyle);
-	documentView.SetDocument(document);
-	documentView.Hide();
+	documentWindow.Create(GetHandle(), "", ChildWindowStyle);
+	documentWindow.SetDocument(document);
+	documentWindow.Hide();
 	activeWindow = consoleWindow;
 
 	consoleWindow.SetFocus();
@@ -95,9 +109,9 @@ void MainFrame::OnOpenSelection(const std::string& value)
 		MsgBox("Edit Project");
 	else
 	{
-		SwitchActiveWindow(documentView);
+		SwitchActiveWindow(documentWindow);
 		document->Open(fullPath);
-		documentView.Invalidate(false);
+		documentWindow.Invalidate(false);
 	}
 	superBox.Close();
 	activeWindow.SetFocus();

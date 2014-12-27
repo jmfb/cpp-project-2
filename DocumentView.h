@@ -1,28 +1,28 @@
 #pragma once
-#include <Wex/CustomWindow.h>
-#include <Wex/Font.h>
-#include <memory>
 #include "Document.h"
+#include <memory>
 
-class DocumentView : public Wex::CustomWindow<DocumentView>
+class DocumentView
 {
 public:
 	DocumentView() = default;
-	DocumentView(const DocumentView& rhs) = delete;
+	DocumentView(const DocumentView& rhs) = default;
 	~DocumentView() = default;
 
-	DocumentView& operator=(const DocumentView& rhs) = delete;
+	DocumentView& operator=(const DocumentView& rhs) = default;
 
-	static void SetupClass(WNDCLASSEX& windowClass);
+	void SetDocument(std::shared_ptr<Document> document);
+	void SetViewSize(int visibleLineCount);
+	int GetLineCount() const;
+	const std::string& GetLine(int lineNumber) const;
 
-	bool OnCreate(CREATESTRUCT* cs) override;
-	void OnPaint() override;
-
-	void SetDocument(std::weak_ptr<Document> value);
+	void PageDown();
+	void PageUp();
 
 private:
 	friend class DocumentViewTest;
-	Wex::Font font;
-	std::weak_ptr<Document> weakDocument;
+	std::shared_ptr<Document> document;
+	int firstVisibleLine = 0;
+	int visibleLineCount = 0;
 };
 

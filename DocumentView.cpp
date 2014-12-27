@@ -1,50 +1,43 @@
 #include <Wex/WindowsInclude.h>
 #include "DocumentView.h"
-#include <Wex/ClientDeviceContext.h>
-#include <Wex/PaintDeviceContext.h>
-#include <Wex/MemoryDeviceContext.h>
-#include "TextDrawer.h"
-#include "CPlusPlusColorer.h"
-#include "ColorScheme.h"
 
-void DocumentView::SetupClass(WNDCLASSEX& windowClass)
+void DocumentView::SetDocument(std::shared_ptr<Document> document)
 {
-	windowClass.lpszClassName = "DocumentView";
-	windowClass.style = CS_HREDRAW|CS_VREDRAW|CS_DBLCLKS;
-	windowClass.hCursor = ::LoadCursor(nullptr, IDC_IBEAM);
+	firstVisibleLine = 0;
+	this->document = document;
 }
 
-bool DocumentView::OnCreate(CREATESTRUCT* cs)
+void DocumentView::SetViewSize(int visibleLineCount)
 {
-	Wex::ClientDeviceContext deviceContext{ GetHandle() };
-	font.Create("Consolas", Wex::Font::CalculateHeight(deviceContext, 10));
-	return true;
+	this->visibleLineCount = visibleLineCount;
 }
 
-void DocumentView::OnPaint()
+int DocumentView::GetLineCount() const
 {
-	Wex::PaintDeviceContext paintDeviceContext{ GetHandle() };
-	Wex::MemoryDeviceContext deviceContext{ paintDeviceContext };
-	deviceContext.FillSolidRect(GetClient(), ColorScheme::Background::Default);
-
-	auto document = weakDocument.lock();
 	if (!document)
-		return;
-
-	deviceContext.Select(font);
-
-	auto client = GetClient();
-	TextDrawer drawer{ deviceContext };
-	for (auto lineNumber = 0; lineNumber < document->GetLineCount(); ++lineNumber)
-	{
-		auto parts = CPlusPlusColorer::Color(document->GetLine(lineNumber));
-		//TODO: modify for selection, find results, etc.
-		drawer.DrawLine(client.left, client.right, lineNumber, parts);
-	}
+		return 0;
+	auto remainingLines = document->GetLineCount() - firstVisibleLine;
+	return std::min(remainingLines, visibleLineCount + 1);
 }
 
-void DocumentView::SetDocument(std::weak_ptr<Document> value)
+const std::string& DocumentView::GetLine(int lineNumber) const
 {
-	weakDocument = value;
+	return document->GetLine(lineNumber + firstVisibleLine);
+}
+
+void DocumentView::PageDown()
+{
+	auto pageDownLine = firstVisibleLine + visibleLineCount;
+	if (pageDownLine >= document->GetLineCount())
+		return;
+	firstVisibleLine = pageDownLine;
+}
+
+void DocumentView::PageUp()
+{
+	auto pageUpLine = firstVisibleLine - visibleLineCount;
+	if (pageUpLine < 0)
+		pageUpLine = 0;
+	firstVisibleLine = pageUpLine;
 }
 
